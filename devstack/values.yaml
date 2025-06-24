@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: waleedqazi/fullstack-node
+  tag: latest
+  pullPolicy: IfNotPresent
+
+containerPort: 3000
+
+service:
+  type: NodePort
+  port: 3000
+
+env:
+  mongo_uri: mongodb://mongo.dev.svc.cluster.local:27017/devopsdb

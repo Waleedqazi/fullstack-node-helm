@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-backend
+  namespace: dev
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: node-backend
+  template:
+    metadata:
+      labels:
+        app: node-backend
+    spec:
+      containers:
+        - name: node-backend
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+          env:
+            - name: MONGO_URI
+              value: "{{ .Values.env.mongo_uri }}"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-backend
+  namespace: dev
+spec:
+  selector:
+    app: node-backend
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: {{ .Values.containerPort }}
+    - name: web
+      port: 80
+      targetPort: {{ .Values.containerPort }}
+  type: NodePort
+
